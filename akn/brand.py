@@ -44,4 +44,7 @@ for f in ["flutter/lib/desktop/pages/desktop_setting_page.dart", "flutter/lib/mo
     sub(f, r"'\$\{translate\('Version'\)\}: \$version'",
         f"'${{translate('Version')}}: {APP} {VER} (RustDesk $version)'")
 sub("flutter/windows/runner/Runner.rc", r'"ProductVersion", VERSION_AS_STRING', f'"ProductVersion", "{VER}"')
+sub("flutter/lib/desktop/pages/desktop_home_page.dart",
+    r"(        child: loadLogo\(\),\n      \),\n)",
+    r"\1      Align(\n        alignment: Alignment.center,\n        child: Padding(\n          padding: const EdgeInsets.only(top: 4),\n          child: Text('" + APP + " v" + VER + "', style: const TextStyle(fontSize: 12, color: Colors.grey)),\n        ),\n      ),\n")
 print("Markalama tamam:", APP, VER)
