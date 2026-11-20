@@ -1,8 +1,11 @@
 name: AKN Windows Build
 'on':
   push:
-    branches: [master]
-    paths: ['akn/**', '.github/workflows/akn-windows.yml']
+    branches:
+    - master
+    paths:
+    - akn/**
+    - .github/workflows/akn-windows.yml
   workflow_dispatch:
     inputs:
       app-name:
@@ -186,7 +189,9 @@ jobs:
 
         pip3 install -r requirements.txt
 
-        python3 ./generate.py -f ../../rustdesk/ -o . -e ../../rustdesk/rustdesk.exe
+        mv ../../rustdesk/rustdesk.exe "../../rustdesk/${{ inputs.app-name || ''AKNDesk'' }}.exe"
+
+        python3 ./generate.py -f ../../rustdesk/ -o . -e "../../rustdesk/${{ inputs.app-name || ''AKNDesk'' }}.exe"
 
         popd
 
@@ -204,3 +209,11 @@ jobs:
         name: ${{ inputs.app-name || 'AKNDesk' }}-windows-exe
         path: ./SignOutput/*.exe
         if-no-files-found: error
+    - name: Release guncelle
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release upload akn-v1 "./SignOutput/${{ inputs.app-name || 'AKNDesk' }}.exe" --clobber -R ${{ github.repository }}
+    permissions:
+      contents: write
+      actions: read
