@@ -213,7 +213,9 @@ jobs:
       shell: bash
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh release upload akn-v1 "./SignOutput/${{ inputs.app-name || 'AKNDesk' }}.exe" --clobber -R ${{ github.repository }}
+      run: 'V=$(tr -d " \r\n" < akn/VERSION)
+
+        gh release create "akn-v$V" "./SignOutput/${{ inputs.app-name || ''AKNDesk'' }}.exe" -R ${{ github.repository }} --title "${{ inputs.app-name || ''AKNDesk'' }} v$V" --notes "${{ inputs.app-name || ''AKNDesk'' }} v$V - $(git log -1 --pretty=%s)" --latest || gh release upload "akn-v$V" "./SignOutput/${{ inputs.app-name || ''AKNDesk'' }}.exe" --clobber -R ${{ github.repository }}'
     permissions:
       contents: write
       actions: read
