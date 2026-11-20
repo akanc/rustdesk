@@ -39,4 +39,9 @@ sub("libs/hbb_common/src/config.rs",
 sub("flutter/windows/runner/Runner.rc", r'"FileDescription", "RustDesk Remote Desktop"',
     f'"FileDescription", "{APP} Uzak Masaustu"')
 sub("flutter/windows/runner/Runner.rc", r'"ProductName", "RustDesk"', f'"ProductName", "{APP}"')
-print("Markalama tamam:", APP)
+VER = (ROOT / "akn" / "VERSION").read_text().strip()
+for f in ["flutter/lib/desktop/pages/desktop_setting_page.dart", "flutter/lib/mobile/pages/settings_page.dart"]:
+    sub(f, r"'\$\{translate\('Version'\)\}: \$version'",
+        f"'${{translate('Version')}}: {APP} {VER} (RustDesk $version)'")
+sub("flutter/windows/runner/Runner.rc", r'"ProductVersion", VERSION_AS_STRING', f'"ProductVersion", "{VER}"')
+print("Markalama tamam:", APP, VER)
